@@ -2,7 +2,7 @@
  * Created by pascalvanhecke on 05/03/17.
  */
 
-const BASE_URL = 'https://irail.be/';
+const BASE_URL = 'https://api.irail.be/';
 
 var options = {
     baseUrl: BASE_URL,

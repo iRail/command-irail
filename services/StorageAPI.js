@@ -11,28 +11,37 @@ class StorageAPI {
     connect() {
         return Promise.resolve()
             .then(() => db.open('./database.sqlite', {Promise}))
-            .then(() => db.migrate({force: 'last'}))
+            .then(() => db.migrate({force: false}))
             .catch(err => console.error(err.stack));
     }
 
     /**
-     * stationURI TEXT,
-     stationID TEXT,
-     lattitude REAL ,
-     longitude REAL ,
-     name VARCHAR(256),
-     sqltime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+     * takes the array fetched from irail api and inserts it into the sqldatase
      */
     async insertStations(stations) {
-        await db.run("BEGIN TRANSACTION");
-        const stmt = await db.prepare("INSERT INTO stations VALUES(?,?,?,?,?,?,?)");
+        try {
+            await db.run("BEGIN TRANSACTION");
+            const stmt = await db.prepare("INSERT INTO stations VALUES(?,?,?,?,?,?,?)");
 
-        for (let station of stations) {
-            await stmt.run(null, station['@id'], station['@id'], station.lattitude, station.longitude, station.name, new Date());
+            for (let station of stations) {
+                const stationURI = station['@id']
+                const stationId = stationURI.substr(stationURI.lastIndexOf('/') + 1)
+                await stmt.run(null, stationURI, stationId, station.latitude, station.longitude, station.name, new Date());
+            }
+
+            stmt.finalize();
+
+            db.run("COMMIT TRANSACTION");
+
+        } catch (error) {
+            console.log('insert stations', error);
         }
-        stmt.finalize();
-        db.run("COMMIT TRANSACTION");
+    }
+
+    selectAllStations() {
+        return db.all('SELECT name as title, stationURI as value FROM Stations')
     }
 }
+
 
 module.exports = StorageAPI;

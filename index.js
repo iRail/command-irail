@@ -1,46 +1,50 @@
-#!/usr/bin/env node
 const cli = require('cli');
-
+const Table = require('cli-table');
 const IrailAPI = require('./services/IrailAPI');
-const StorageAPI = require('./services/StorageAPI');
 
+const StorageAPI = require('./services/StorageAPI');
 const irailAPI = new IrailAPI();
 const storageAPI = new StorageAPI();
+const autoCompletePromise = require('./utils/autocompletePromise');
+const DateFormat = require('./utils/DateFormat');
 
-/*
- const autocompletePrompt = require('cli-autocomplete')
+storageAPI.connect().then(async()=> {
+    //const stationsResult = await irailAPI.getAllStations();
+    //await storageAPI.insertStations(stationsResult.body['@graph']);
+    const stations = await storageAPI.selectAllStations();
 
- const colors = [
- {title: 'gent sint pieters',    value: '#f00'},
- {title: 'gent dampoort', value: '#ff0'},
- {title: 'green',  value: '#0f0'},
- {title: 'blue',   value: '#00f'},
- {title: 'black',  value: '#000'},
- {title: 'white',  value: '#fff'}
- ]
- const suggestColors = (input) => Promise.resolve(
- colors.filter((color) => color.title.slice(0, input.length) === input && input.length > 2))
+    const suggestedStations = (input) => Promise.resolve(stations
+        .filter((color) => color.title.slice(0, input.length).toLowerCase() === input.toLowerCase() && input.length > 1));
 
- autocompletePrompt('What is your favorite color?', suggestColors)
- .on('abort', (v) => console.log('Aborted with', v))
- .on('submit', (v) => console.log('Submitted with', v))
- */
+    const from = await autoCompletePromise.stations(suggestedStations, 'Van welk station zou je vertrekken?');
+    const to = await autoCompletePromise.stations(suggestedStations, 'Naar welk station wil je reizen?');
+
+    const travel = await irailAPI.routeFromTo(from, to);
+    const connections = travel.body.connection;
+
+    printConnections(connections)
+});
+
+const printConnections = (connections)=> {
+    var table = new Table({head: ["","Vertrek", "Aankomst"]});
+
+    let counter = 1;
+    for (let connection of connections) {
+        const departure = connection.departure;
+        const arrival = connection.arrival;
+        const keyValue = counter.toString();
+        let value = {}
+
+        value[keyValue] = [, departure.station + " " + DateFormat.irail(departure.time), arrival.station + " " + DateFormat.irail(arrival.time)]
+        table.push(value);
+        counter++;
+
+    }
+
+    console.log(table.toString())
 
 
-storageAPI.connect().then(()=> {
-    console.log('connected');
-    irailAPI.getAllStations().then((response)=> {
-        //console.log(response.body);
-        //console.log(response.body['@graph'][0]);
-
-        storageAPI.insertStations(response.body['@graph']);
-        return
-        /*for (let station of response.body['@graph']) {
-         console.log(station.name);
-         }*/
-
-    });
-})
+}
 
 
 //cli.spinner('Working..');
