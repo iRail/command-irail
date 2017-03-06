@@ -10,8 +10,8 @@ class StorageAPI {
 
     connect() {
         return Promise.resolve()
-            .then(() => db.open('./database.sqlite', {Promise}))
-            .then(() => db.migrate({force: false}))
+            .then(() => db.open('database.sqlite', {Promise}))
+            .then(() => db.migrate({force: false, migrationsPath: "migrations"}))
             .catch(err => console.error(err.stack));
     }
 

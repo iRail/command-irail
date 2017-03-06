@@ -1,5 +1,6 @@
+#! /usr/bin/env node
 const cli = require('cli');
-const Table = require('cli-table');
+const Table = require('cli-table2');
 const IrailAPI = require('./services/IrailAPI');
 
 const StorageAPI = require('./services/StorageAPI');
@@ -8,9 +9,12 @@ const storageAPI = new StorageAPI();
 const autoCompletePromise = require('./utils/autocompletePromise');
 const DateFormat = require('./utils/DateFormat');
 
-storageAPI.connect().then(async()=> {
-    //const stationsResult = await irailAPI.getAllStations();
-    //await storageAPI.insertStations(stationsResult.body['@graph']);
+async function create() {
+
+    await storageAPI.connect();
+    const stationsResult = await irailAPI.getAllStations();
+
+    await storageAPI.insertStations(stationsResult.body['@graph']);
     const stations = await storageAPI.selectAllStations();
 
     const suggestedStations = (input) => Promise.resolve(stations
@@ -22,20 +26,37 @@ storageAPI.connect().then(async()=> {
     const travel = await irailAPI.routeFromTo(from, to);
     const connections = travel.body.connection;
 
-    printConnections(connections)
-});
+    printConnections(connections);
+}
+
+;
 
 const printConnections = (connections)=> {
-    var table = new Table({head: ["","Vertrek", "Aankomst"]});
+    // For most of these examples, and most of the unit tests we disable colors.
+    // It makes unit tests easier to write/understand, and allows these pages to
+    // display the examples as text instead of screen shots.
+    var table = new Table({
+        head: ['From', 'Departure', 'To', 'Arrival', 'duration',]
+        , style: {
+            head: []    //disable colors in header cells
+            , border: []  //disable colors for the border
+        }
+        , colWidths: [20, 11, 20, 11, 5]  //set the widths of each column (optional)
+    });
 
     let counter = 1;
     for (let connection of connections) {
         const departure = connection.departure;
         const arrival = connection.arrival;
-        const keyValue = counter.toString();
-        let value = {}
 
-        value[keyValue] = [, departure.station + " " + DateFormat.irail(departure.time), arrival.station + " " + DateFormat.irail(arrival.time)]
+        let value = [
+            departure.station,
+            DateFormat.irail(departure.time),
+            arrival.station,
+            DateFormat.irail(arrival.time),
+            DateFormat.duration(departure.time, arrival.time) + ' minutes'
+        ]
+
         table.push(value);
         counter++;
 
@@ -45,6 +66,8 @@ const printConnections = (connections)=> {
 
 
 }
+
+create()
 
 
 //cli.spinner('Working..');

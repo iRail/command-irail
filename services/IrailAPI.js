@@ -2,10 +2,11 @@
  * Created by pascalvanhecke on 05/03/17.
  */
 
-const BASE_URL = 'https://api.irail.be/';
+const BASE_URL = 'https://irail.be/';
+const BASE_API_URL = 'https://api.irail.be/';
 
 var options = {
-    baseUrl: BASE_URL,
+    baseUrl: BASE_API_URL,
     json: true,
     simple: false,
     resolveWithFullResponse: true,
@@ -22,7 +23,11 @@ class IrailAPI {
     }
 
     getAllStations() {
-        return request.get('stations/NMBS');
+        const options = {
+            baseUrl: BASE_URL,
+            uri: 'stations/NMBS',
+        }
+        return request.get(options);
     }
 
     routeFromTo(from, to) {

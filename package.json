@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "get your train data via command line",
   "main": "index.js",
+  "bin": {
+    "irail": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,7 +22,7 @@
   "dependencies": {
     "cli": "^1.0.1",
     "cli-autocomplete": "^0.4.0",
-    "cli-table": "^0.3.1",
+    "cli-table2": "^0.2.0",
     "dateformat": "^2.0.0",
     "request": "^2.80.0",
     "request-promise": "^4.1.1",
