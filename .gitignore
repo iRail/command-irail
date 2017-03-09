@@ -73,3 +73,6 @@ Temporary Items
 
 # node modules
 node_modules
+
+#databases
+*.sqlite
