@@ -1,0 +1,46 @@
+/**
+ * Created by pascalvanhecke on 09/03/17.
+ */
+const Table = require('cli-table2');
+const DateFormat = require('./DateFormat');
+
+const createConnectionTable = (connections)=> {
+    // For most of these examples, and most of the unit tests we disable colors.
+    // It makes unit tests easier to write/understand, and allows these pages to
+    // display the examples as text instead of screen shots.
+    var table = new Table({
+        head: [
+            'Vertrek',
+            'Van',
+            'Aankomst',
+            'Naar',
+            'reistijd',
+        ]
+        , style: {
+            head: []    //disable colors in header cells
+            , border: []  //disable colors for the border
+        }
+        , colWidths: [20, 11, 20, 11, 10]  //set the widths of each column (optional)
+    });
+
+    let counter = 1;
+    for (let connection of connections) {
+        const departure = connection.departure;
+        const arrival = connection.arrival;
+
+        let value = [
+            DateFormat.irail(departure.time),
+            departure.station,
+            DateFormat.irail(arrival.time),
+            arrival.station,
+            DateFormat.minutesToHoursAndMinutes(DateFormat.duration(departure.time, arrival.time)),
+        ]
+
+        table.push(value);
+        counter++;
+
+    }
+    return table;
+}
+
+module.exports = createConnectionTable;

@@ -16,7 +16,16 @@ const DateFormat = {
         const _MS_PER_HOUR = 1000 * 60
         const difference = endDate - startDate;
         return Math.floor(difference / _MS_PER_HOUR);
+    },
+
+    minutesToHoursAndMinutes(totalMinutes){
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        return `${hours}:${minutes}`
     }
+
+
 }
 
 module.exports = DateFormat;
