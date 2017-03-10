@@ -23,7 +23,7 @@ class StorageAPI {
     async migrate() {
         try {
             await db.migrate({
-                force: 'last',
+                force: false,
                 migrationsPath: this.directory + "/migrations",
             });
         } catch (error) {
@@ -34,8 +34,13 @@ class StorageAPI {
 
     }
 
+    async hasStations() {
+        return db.all('SELECT * FROM Stations LIMIT 1');
+    }
+
     /**
-     * takes the array fetched from irail api and inserts it into the sqldatase
+     * takes the array fetched from irail api and inserts it into the sqlite
+     * into table Stations
      */
     async insertStations(stations) {
         try {

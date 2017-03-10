@@ -1,60 +1,39 @@
 #! /usr/bin/env node
-const fs = require('fs');
-const path = require('path');
+'use strict';
+const Irail = require('./Irail')
 
-const cli = require('cli');
+const packageJson = require('./package.json');
+console.log(packageJson.version);
 
-const IrailAPI = require('./services/IrailAPI');
-const StorageAPI = require('./services/StorageAPI');
+var ArgumentParser = require('argparse').ArgumentParser;
 
-const autoCompletePromise = require('./utils/autocompletePromise');
-const createConnectionTable = require('./utils/createConnectionTable');
+var parser = new ArgumentParser({
+    version: packageJson.version,
+    description: 'Irail command line'
+});
 
-const directory = path.dirname(fs.realpathSync(__filename));
+parser.addArgument(
+    ['-f', '--favorites'],
+    {
+        help: 'lists most beloved destinations'
+    }
+);
 
-const irailAPI = new IrailAPI();
-const storageAPI = new StorageAPI(directory);
+parser.addArgument(
+    ['-l', '--last'],
+    {
+        help: 'repeats last search route'
+    }
+);
+
+var args = parser.parseArgs();
+//console.dir(args);
+const irail = new Irail();
 
 async function run() {
-
-    try {
-        await storageAPI.connect();
-        await storageAPI.migrate();
-    } catch (e) {
-        console.error(e);
-        return
-    }
-
-    try {
-        const stationsResult = await irailAPI.getAllStations();
-        await storageAPI.insertStations(stationsResult.body['@graph']);
-    } catch (e) {
-        console.error(e);
-        return
-    }
-
-    const stations = await storageAPI.selectAllStations();
-
-    const suggestedStations = (input) => Promise.resolve(stations
-        .filter((color) => color.title.slice(0, input.length).toLowerCase() === input.toLowerCase() && input.length > 1));
-
-    let from;
-    let to;
-    try {
-        from = await autoCompletePromise.stations(suggestedStations, 'Van welk station zou je vertrekken?');
-        to = await autoCompletePromise.stations(suggestedStations, 'Naar welk station wil je reizen?');
-    } catch (error) {
-        console.log(error);
-        return;
-    }
-
-    try {
-        const travel = await irailAPI.routeFromTo(from, to);
-        const connections = travel.body.connection;
-        const table = createConnectionTable(connections);
-        console.log(table.toString());
-    } catch (error) {
-
+    const routes = await irail.fromToFlow();
+    if (routes) {
+        console.log(routes);
     }
 
 }

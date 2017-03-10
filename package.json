@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/iRail/command-irail#readme",
   "dependencies": {
+    "argparse": "^1.0.9",
     "cli": "^1.0.1",
     "cli-autocomplete": "^0.4.0",
     "cli-table2": "^0.2.0",

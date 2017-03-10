@@ -1,0 +1,10 @@
+-- Up
+CREATE TABLE IF NOT EXISTS History (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    fromId TEXT,
+    toId TEXT,
+    sqltime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    );
+
+-- Down
+DROP TABLE History;
