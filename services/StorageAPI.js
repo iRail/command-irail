@@ -5,7 +5,7 @@ const db = require('sqlite');
 
 
 class StorageAPI {
-    
+
     constructor(directory) {
         this.directory = directory
     }
