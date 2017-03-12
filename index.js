@@ -1,9 +1,7 @@
 #! /usr/bin/env node
 'use strict';
 const Irail = require('./Irail')
-
 const packageJson = require('./package.json');
-console.log(packageJson.version);
 
 var ArgumentParser = require('argparse').ArgumentParser;
 
@@ -13,29 +11,28 @@ var parser = new ArgumentParser({
 });
 
 parser.addArgument(
-    ['-f', '--favorites'],
-    {
-        help: 'lists most beloved destinations'
-    }
-);
-
-parser.addArgument(
     ['-l', '--last'],
     {
-        help: 'repeats last search route'
+        nargs: 0,
+        help: 'repeats last searched route'
     }
 );
 
 var args = parser.parseArgs();
-//console.dir(args);
+
 const irail = new Irail();
 
 async function run() {
-    const routes = await irail.fromToFlow();
+    let routes;
+    if (args.last) {
+        routes = await irail.lastFromHistoryFlow();
+    } else {
+        routes = await irail.fromToFlow();
+    }
+
     if (routes) {
         console.log(routes);
     }
-
 }
 
 run();

@@ -21,7 +21,7 @@ const createConnectionTable = (connections)=> {
             head: []    //disable colors in header cells
             , border: []  //disable colors for the border
         }
-        , colWidths: [8,12, 20, 12, 20, 10]  //set the widths of each column (optional)
+        , colWidths: [8, 12, 20, 12, 20, 10]  //set the widths of each column (optional)
     });
 
     let counter = 1;

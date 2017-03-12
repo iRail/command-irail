@@ -23,7 +23,7 @@ class StorageAPI {
     async migrate() {
         try {
             await db.migrate({
-                force: false,
+                force: true,
                 migrationsPath: this.directory + "/migrations",
             });
         } catch (error) {
@@ -64,6 +64,31 @@ class StorageAPI {
 
     selectAllStations() {
         return db.all('SELECT name as title, stationURI as value FROM Stations')
+    }
+
+    /**
+     * saves the
+     * @param from
+     * @param to
+     * @returns {Promise<Statement>|*}
+     */
+    saveToHistory(from, to) {
+        return db.run("INSERT INTO History (fromId, toId) VALUES ($fromId, $toId)", {
+            $fromId: from,
+            $toId: to,
+        });
+    }
+
+    /**
+     * gets last search from history
+     * @returns {Promise<Statement>|*}
+     */
+    getLastSearchFromHistory() {
+        return db.all(`SELECT a.name as fromStation, a.stationURI as fromId,c.name as toStation, c.stationURI as toId, c.updated as updated from History b 
+                    JOIN Stations a ON b.fromId=a.stationURI
+                    JOIN Stations c ON b.toId=c.stationURI 
+                    ORDER by updated DESC
+                    LIMIT 1`);
     }
 }
 
