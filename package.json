@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/babel src/ --out-file bin/index.js"
+    "build": "./node_modules/.bin/babel src --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,9 @@
   "bugs": {
     "url": "https://github.com/iRail/command-irail/issues"
   },
+  "keywords": [
+    "irail","nmbs","belgië"
+  ],
   "homepage": "https://github.com/iRail/command-irail#readme",
   "dependencies": {
     "argparse": "^1.0.9",
