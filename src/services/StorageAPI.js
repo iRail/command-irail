@@ -11,7 +11,6 @@ class StorageAPI {
     }
 
     async connect() {
-        console.log('this.directory', this.directory)
         try {
             await db.open(this.directory + '/database.sqlite')
         } catch (error) {
