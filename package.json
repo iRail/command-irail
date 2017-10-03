@@ -1,6 +1,6 @@
 {
   "name": "command-irail",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "get your train data via command line",
   "main": "index.js",
   "preferGlobal": true,
