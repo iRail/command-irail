@@ -1,13 +1,14 @@
 {
   "name": "command-irail",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "get your train data via command line",
   "main": "index.js",
   "bin": {
-    "irail": "./index.js"
+    "irail": "./lib/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src/ --out-file bin/index.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
     "prompt-skeleton": "^0.4.0",
     "request": "^2.80.0",
     "request-promise": "^4.1.1",
-    "sqlite": "^2.3.0"
+    "sqlite": "^2.8.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.0"
   }
 }

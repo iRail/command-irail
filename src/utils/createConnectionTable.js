@@ -2,7 +2,7 @@
  * Created by pascalvanhecke on 09/03/17.
  */
 const Table = require('cli-table2');
-const DateFormat = require('./DateFormat');
+const DateFormat = require("./DateFormat");
 
 const createConnectionTable = (connections)=> {
     // For most of these examples, and most of the unit tests we disable colors.

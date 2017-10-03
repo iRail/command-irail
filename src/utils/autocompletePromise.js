@@ -3,7 +3,7 @@
  */
 const autocompletePrompt = require('cli-autocomplete')
 
-autocompletePromise = {
+const autocompletePromise = {
     stations: (stationFilter, promptMessage)=> {
         var promise = new Promise(function (resolve, reject) {
             // do a thing, possibly async, then…

@@ -44,4 +44,4 @@ class IrailAPI {
     }
 }
 
-module.exports = IrailAPI;
+module.exports =  IrailAPI;
