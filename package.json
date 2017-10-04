@@ -1,6 +1,6 @@
 {
   "name": "command-irail",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "get your train data via command line",
   "main": "index.js",
   "preferGlobal": true,
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/babel src --out-dir lib"
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "start": "nodemon --liveboard src/index.js "
   },
   "repository": {
     "type": "git",
