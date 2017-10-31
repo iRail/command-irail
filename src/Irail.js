@@ -7,6 +7,7 @@ const path = require("path");
 const directory = path.dirname(fs.realpathSync(__filename));
 
 const autoCompletePromise = require("./utils/autocompletePromise");
+const datePromptPromise = require("./utils/datePromptPromise");
 const createConnectionTable = require("./utils/createConnectionTable");
 const createLiveboardTable = require("./utils/createLiveboardTable");
 
@@ -89,11 +90,27 @@ class Irail {
     }
   }
 
+  async getDate(type) {
+    try {
+      const messageType = type === "depart" ? "vertrekken" : "aankomen";
+      const message = `Wanneer wil je ${messageType}?'`;
+      const dateResult = await datePromptPromise(message);
+
+      return {
+        date: dateResult.format("DDMMYY"),
+        time: dateResult.format("HHmm"),
+        timeSel: type
+      };
+    } catch (error) {
+      console.log(error.toString());
+    }
+  }
+
   /**
      * full flow for manually giving the from to flow
      * with a result that gives a routes table
      */
-  async fromToFlow() {
+  async fromToFlow(type = "arrival") {
     try {
       await this.connectAndMigrate();
     } catch (error) {
@@ -118,10 +135,19 @@ class Irail {
       //console.log(error);
       return error;
     }
+    let dateResult;
+
+    if (type) {
+      try {
+        dateResult = await this.getDate(type);
+      } catch (error) {
+        return error;
+      }
+    }
 
     try {
       await storageAPI.saveToHistory(from, to);
-      return await this.getRoute(from, to);
+      return await this.getRoute(from, to, dateResult);
     } catch (error) {
       return error;
     }
@@ -170,13 +196,15 @@ class Irail {
       return error;
     }
     const liveboardResult = await irailAPI.liveboard(station);
-    const liveboardTable = createLiveboardTable(liveboardResult.body.departures.departure);
+    const liveboardTable = createLiveboardTable(
+      liveboardResult.body.departures.departure
+    );
     return liveboardTable.toString();
-}
+  }
 
-  async getRoute(from, to) {
+  async getRoute(from, to, dateResult) {
     try {
-      const travel = await irailAPI.routeFromTo(from, to);
+      const travel = await irailAPI.routeFromTo(from, to, dateResult);
       const connections = travel.body.connection;
       const connectionsTable = createConnectionTable(connections);
 

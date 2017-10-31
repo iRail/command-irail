@@ -20,6 +20,16 @@ parser.addArgument(["-lb", "--liveboard"], {
   help: "get live board for the given station"
 });
 
+parser.addArgument(["-de", "--depart"], {
+  nargs: 0,
+  help: "depart at certain time"
+});
+
+parser.addArgument(["-ar", "--arrive"], {
+  nargs: 0,
+  help: "arrive at certain time"
+});
+
 var args = parser.parseArgs();
 
 const irail = new Irail();
@@ -33,7 +43,13 @@ async function run() {
     case args.liveboard != null:
       routes = await irail.liveboard();
       break;
-      default:
+    case args.arrive != null:
+      routes = await irail.fromToFlow('arrival');
+      break;
+    case args.depart != null:
+      routes = await irail.fromToFlow('depart');
+      break;
+    default:
         routes = await irail.fromToFlow();
       break
   }

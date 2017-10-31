@@ -1,6 +1,6 @@
 {
   "name": "command-irail",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "get your train data via command line",
   "main": "index.js",
   "preferGlobal": true,
@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/babel src --out-dir lib",
-    "start": "nodemon --liveboard src/index.js "
+    "start": "nodemon src/index.js "
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,9 @@
     "url": "https://github.com/iRail/command-irail/issues"
   },
   "keywords": [
-    "irail","nmbs","belgië"
+    "irail",
+    "nmbs",
+    "belgië"
   ],
   "homepage": "https://github.com/iRail/command-irail#readme",
   "dependencies": {
@@ -30,6 +32,7 @@
     "cli": "^1.0.1",
     "cli-autocomplete": "^0.4.0",
     "cli-table2": "^0.2.0",
+    "date-prompt": "^0.7.0",
     "dateformat": "^2.0.0",
     "prompt-skeleton": "^0.4.0",
     "request": "^2.80.0",
@@ -37,6 +40,7 @@
     "sqlite": "^2.8.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0"
   }
 }

@@ -17,7 +17,6 @@ var options = {
 const request = require("request-promise").defaults(options);
 
 class IrailAPI {
-
   getAllStations() {
     const options = {
       baseUrl: BASE_URL,
@@ -26,18 +25,21 @@ class IrailAPI {
     return request.get(options);
   }
 
-  routeFromTo(from, to) {
+  routeFromTo(from, to, dateResult) {
+    const queryStringOptions = {
+      from,
+      to,
+      ...dateResult
+    };
+
     const options = {
       uri: "connections/",
-      qs: {
-        from,
-        to
-      }
+      qs: queryStringOptions
     };
 
     return request.get(options);
   }
-  
+
   liveboard(station) {
     const options = {
       uri: "liveboard/",
