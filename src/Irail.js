@@ -110,7 +110,7 @@ class Irail {
      * full flow for manually giving the from to flow
      * with a result that gives a routes table
      */
-  async fromToFlow(type = "arrival") {
+  async fromToFlow(type) {
     try {
       await this.connectAndMigrate();
     } catch (error) {
